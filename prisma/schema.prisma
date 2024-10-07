@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Patient {
+  id              Int                    @id @default(autoincrement())
+  hasAdhd         Boolean
+  stroopTasks     StroopTask[]?
+  cptTasks        ContinuousPerformanceTask[]?
+  sstTasks        StopSignalTask[]?
+  createdAt       DateTime               @default(now())
+}
+
+model StroopTask {
+  id              Int     @id @default(autoincrement())
+  responseTime    Float
+  correctAnswers  Int
+  errors          Int
+  patientId       Int
+  patient         Patient @relation(fields: [patientId], references: [id])
+  createdAt       DateTime @default(now())
+}
+
+model ContinuousPerformanceTask {
+  id              Int     @id @default(autoincrement())
+  reactionTime    Float
+  omissionErrors  Int
+  commissionErrors Int
+  patientId       Int
+  patient         Patient @relation(fields: [patientId], references: [id])
+  createdAt       DateTime @default(now())
+}
+
+model StopSignalTask {
+  id              Int     @id @default(autoincrement())
+  reactionTime    Float
+  correctResponses Int
+  failures        Int
+  omittedArrows   Int
+  patientId       Int
+  patient         Patient @relation(fields: [patientId], references: [id])
+  createdAt       DateTime @default(now())
+}
