@@ -16,7 +16,7 @@ export class PatientsService {
   async getPatient(id: number) {
     try {
       const patient = await this.prisma.patient.findUnique({
-        where: { id: parseInt(id.toString(), 10) },
+        where: { id },
         include: {
           stroopTasks: true,
           cptTasks: true,
@@ -35,7 +35,6 @@ export class PatientsService {
     }
   }
   
-
   async getAllPatients() {
     return this.prisma.patient.findMany({
       include: {
@@ -48,13 +47,13 @@ export class PatientsService {
 
   async deletePatient(id: number) {
     try {
-      const patient = await this.prisma.patient.findUnique({ where: { id: parseInt(id.toString(), 10) } });
+      const patient = await this.prisma.patient.findUnique({ where: { id } });
       
       if (!patient) {
         throw new NotFoundException(`Patient with ID ${id} not found`);
       }
   
-      return this.prisma.patient.delete({ where: { id: parseInt(id.toString(), 10) } });
+      return this.prisma.patient.delete({ where: { id } });
     } catch (error) {
       console.error(`Error deleting patient with ID ${id}:`, error);
       throw new Error(`Failed to delete patient: ${error.message}`);

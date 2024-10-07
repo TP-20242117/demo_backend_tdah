@@ -21,11 +21,11 @@ export class PatientsController {
 
   @Get(':id')
   async getPatient(@Param('id') id: number) {
-    return this.patientsService.getPatient(id);
+    return this.patientsService.getPatient(+id);
   }
 
   @Delete(':id')
   async deletePatient(@Param('id') id: number) {
-    return this.patientsService.deletePatient(id);
+    return this.patientsService.deletePatient(+id);
   }
 }
