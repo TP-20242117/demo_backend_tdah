@@ -14,41 +14,41 @@ datasource db {
 }
 
 model Patient {
-  id              Int                    @id @default(autoincrement())
+  id              Int                        @id @default(autoincrement())
   hasAdhd         Boolean
-  stroopTasks     StroopTask[]?
-  cptTasks        ContinuousPerformanceTask[]?
-  sstTasks        StopSignalTask[]?
-  createdAt       DateTime               @default(now())
+  stroopTasks     StroopTask[]               @relation(name: "StroopPatient")
+  cptTasks        ContinuousPerformanceTask[] @relation(name: "CPTPatient")
+  sstTasks        StopSignalTask[]           @relation(name: "SSTPatient")
+  createdAt       DateTime                   @default(now())
 }
 
 model StroopTask {
-  id              Int     @id @default(autoincrement())
-  responseTime    Float
-  correctAnswers  Int
-  errors          Int
-  patientId       Int
-  patient         Patient @relation(fields: [patientId], references: [id])
-  createdAt       DateTime @default(now())
+  id             Int      @id @default(autoincrement())
+  responseTime   Float
+  correctAnswers Int
+  errors         Int
+  patientId      Int
+  patient        Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade, name: "StroopPatient")
+  createdAt      DateTime @default(now())
 }
 
 model ContinuousPerformanceTask {
-  id              Int     @id @default(autoincrement())
-  reactionTime    Float
-  omissionErrors  Int
+  id               Int      @id @default(autoincrement())
+  reactionTime     Float
+  omissionErrors   Int
   commissionErrors Int
-  patientId       Int
-  patient         Patient @relation(fields: [patientId], references: [id])
-  createdAt       DateTime @default(now())
+  patientId        Int
+  patient          Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade, name: "CPTPatient")
+  createdAt        DateTime @default(now())
 }
 
 model StopSignalTask {
-  id              Int     @id @default(autoincrement())
-  reactionTime    Float
+  id               Int      @id @default(autoincrement())
+  reactionTime     Float
   correctResponses Int
-  failures        Int
-  omittedArrows   Int
-  patientId       Int
-  patient         Patient @relation(fields: [patientId], references: [id])
-  createdAt       DateTime @default(now())
+  failures         Int
+  omittedArrows    Int
+  patientId        Int
+  patient          Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade, name: "SSTPatient")
+  createdAt        DateTime @default(now())
 }
